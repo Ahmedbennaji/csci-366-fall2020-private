@@ -5,6 +5,8 @@ char * print_binary_representation(unsigned int i, char *buffer){
     buffer[1] = 'b';
     // fill out remaining 32 bits, 1 or 0 depending on the value in the number i
     return buffer;
+
+printf("%d\n",12 | 6);
 }
 
 /* PROBLEM 1: Implement a print_binary_representation function that takes an
@@ -37,14 +39,14 @@ struct Person {
     int age;
 };
 
-void set_my_age(struct Person p) {
-    p.age = 44;
+void set_my_age(struct Person *p) {
+    p->age = 44;
 }
 
 int get_my_age() {
     struct Person me;
     me.name = "Carson";
-    set_my_age(me);
+    set_my_age(&me);
     return me.age;
 }
 
