@@ -53,8 +53,19 @@ unsigned long long int xy_to_bitval(int x, int y) {
     //
     // you will need to use bitwise operators and some math to produce the right
     // value.
-}
+    printf("0b");
+    unsigned i = 32;
+    do {
+        i--;
+        printf("%d", (x & (1ull << i)) != 0);
+        if(i % 4 == 0) {
+            printf(" ");
+        }
 
+    }while (x ==0);
+
+
+}
 struct game * game_get_current() {
     return GAME;
 }

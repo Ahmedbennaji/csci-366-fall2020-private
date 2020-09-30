@@ -4,6 +4,8 @@ char * print_binary_representation(unsigned int i, char *buffer){
     buffer[0] = '0';
     buffer[1] = 'b';
     // fill out remaining 32 bits, 1 or 0 depending on the value in the number i
+
+
     return buffer;
 
 printf("%d\n",12 | 6);
