@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "game.h"
+#include <string.h>
 
 // STEP 10 - Synchronization: the GAME structure will be accessed by both players interacting
 // asynchronously with the server.  Therefore the data must be protected to avoid race conditions.
@@ -53,7 +54,9 @@ unsigned long long int xy_to_bitval(int x, int y) {
     //
     // you will need to use bitwise operators and some math to produce the right
     // value.
-    return 1ull;
+   unsigned long long value = 1ull <<x;
+   value = 1ull << (y*8+x);
+   return value;
 }
 
 struct game * game_get_current() {
@@ -72,16 +75,104 @@ int game_load_board(struct game *game, int player, char * spec) {
     // slot and return 1
     //
     // if it is invalid, you should return -1
-}
 
-int add_ship_horizontal(player_info *player, int x, int y, int length) {
-    // implement this as part of Step 2
-    // returns 1 if the ship can be added, -1 if not
-    // hint: this can be defined recursively
-}
 
-int add_ship_vertical(player_info *player, int x, int y, int length) {
-    // implement this as part of Step 2
-    // returns 1 if the ship can be added, -1 if not
-    // hint: this can be defined recursively
-}
+    // strlen to return the length of spec
+    //for loop in specs and increment by 3
+    // change numbers to chars
+
+    int carrier = 5;
+    int battleship = 4;
+    int destroyer = 3;
+    int submarine = 3;
+    int patrolboat = 2;
+    bool horizontal;
+
+ struct player_info * playerInfo = &game ->players[player];
+
+
+
+    int l = strlen(spec);
+    for (int i = 0; i <= 15; i = i + 3) {
+
+       char x = spec[i+1];
+       int conXtonum = x - '0';
+        char y = spec[i + 2];
+         int contYtonum = y - '0';
+
+
+        if (spec[i] == 'C'|| spec[i] =='c') {
+
+            if(spec[i] == 'C'){
+                add_ship_horizontal(playerInfo,conXtonum,contYtonum, carrier);
+
+
+            }
+            else{
+                add_ship_vertical(playerInfo,conXtonum,contYtonum,carrier);
+            }
+
+
+        }
+
+
+        if (spec[i] == 'B'|| spec[i]=='b') {
+
+
+            if(spec[i] =='B'){
+                add_ship_horizontal(playerInfo,conXtonum,contYtonum,battleship);
+            }
+            else{
+                add_ship_vertical(playerInfo,conXtonum,contYtonum,battleship);
+            }
+        }
+
+
+
+            if (spec[i] == 'D'|| spec[i]=='d') {
+                if(spec[i]=='D'){
+                    add_ship_horizontal(playerInfo,conXtonum,contYtonum,destroyer);
+                }
+                else{
+                    add_ship_vertical(playerInfo,conXtonum,contYtonum,destroyer);
+                }
+            }
+
+
+
+            if (spec[i] == 'S' || spec[i] == 's') {
+                if(spec[i]=='S'){
+                    add_ship_horizontal(playerInfo,conXtonum,contYtonum,submarine);
+                }
+                else{
+                    add_ship_vertical(playerInfo,conXtonum,contYtonum,submarine);
+                }
+            }
+
+            if (spec[i] == 'P'||spec =='p') {
+                if(spec[i] == 'P'){
+                    add_ship_horizontal(playerInfo,conXtonum,contYtonum,patrolboat);
+                }
+                else{
+                    add_ship_vertical(playerInfo,conXtonum,contYtonum,patrolboat);
+                }
+            }
+
+        }
+    }
+
+
+
+        int add_ship_horizontal(player_info *player, int x, int y, int length) {
+
+            
+            // implement this as part of Step 2
+            // returns 1 if the ship can be added, -1 if not
+            // hint: this can be defined recursively
+        }
+
+        int add_ship_vertical(player_info *player, int x, int y, int length) {
+            // implement this as part of Step 2
+            // returns 1 if the ship can be added, -1 if not
+            // hint: this can be defined recursively
+        }
