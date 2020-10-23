@@ -1,3 +1,16 @@
 ;; TODO - implement counting up from 1 to 10
 ;; in RISC assembly
 ;; Paste the code below, along with the output
+
+
+1      MOV R0, #2
+2      MOV R1, #4
+3      MOV R2,#0
+4 LOOP:ADD R2,R2,R0
+5      SUB R1,R1,#1
+6      CMP R1,#0
+7      BGT LOOP
+8      B END
+9 END: HALT
+
+;;R0          `10`

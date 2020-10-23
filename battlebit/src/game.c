@@ -165,14 +165,19 @@ int game_load_board(struct game *game, int player, char * spec) {
 
         int add_ship_horizontal(player_info *player, int x, int y, int length) {
 
-            
+            // make sure x and y in the board
+            // check the players ship variable to if there is an existing ship need to use bit mask
+            // update tht bit
+
             // implement this as part of Step 2
             // returns 1 if the ship can be added, -1 if not
             // hint: this can be defined recursively
+
         }
 
         int add_ship_vertical(player_info *player, int x, int y, int length) {
             // implement this as part of Step 2
             // returns 1 if the ship can be added, -1 if not
             // hint: this can be defined recursively
+
         }
