@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "game.h"
+#include "string.h"
 
 // STEP 10 - Synchronization: the GAME structure will be accessed by both players interacting
 // asynchronously with the server.  Therefore the data must be protected to avoid race conditions.
@@ -53,6 +54,10 @@ unsigned long long int xy_to_bitval(int x, int y) {
     //
     // you will need to use bitwise operators and some math to produce the right
     // value.
+
+    unsigned long long value = 1ull <<x;
+    value = 1ull << (y*8+x);
+    return value;
 }
 
 struct game * game_get_current() {
@@ -70,16 +75,116 @@ int game_load_board(struct game *game, int player, char * spec) {
     // slot and return 1
     //
     // if it is invalid, you should return -1
+    int carrier = 5;
+    int battleship = 4;
+    int destroyer = 3;
+    int submarine = 3;
+    int patrolboat = 2;
+
+    struct player_info * playerInfo = &game ->players[player];
+
+        //return the length of spec
+         int l =  strlen(spec);
+            if(NULL == spec){
+                return -1;
+            }
+
+    for (int i = 0; i <= 15; i = i + 3) {
+        char x = spec[i+1];
+        int conXtonum = x - '0';
+        char y = spec[i + 2];
+        int contYtonum = y - '0';
+        if (spec[i] == 'C'|| spec[i] =='c') {
+            if(spec[i] == 'C'){
+                // check if C have been already been  added
+                add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5);
+            }
+            else{
+                add_ship_vertical(playerInfo,conXtonum,contYtonum,5);
+            }
+
+        }
+
+        if (spec[i] == 'B'|| spec[i]=='b') {
+            if(spec[i] =='B'){
+                add_ship_horizontal(playerInfo,conXtonum,contYtonum,4);
+            }
+            else{
+                add_ship_vertical(playerInfo,conXtonum,contYtonum,4);
+            }
+        }
+
+        if (spec[i] == 'D'|| spec[i]=='d') {
+            if(spec[i]=='D'){
+                add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
+            }
+            else{
+                add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
+            }
+        }
+
+        if (spec[i] == 'S' || spec[i] == 's') {
+            if(spec[i]=='S'){
+                add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
+            }
+            else{
+                add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
+            }
+        }
+        if (spec[i] == 'P'||spec[i] =='p') {
+            if(spec[i] == 'P'){
+                add_ship_horizontal(playerInfo,conXtonum,contYtonum,2);
+            }
+            else{
+                add_ship_vertical(playerInfo,conXtonum,contYtonum,2);
+            }
+        }
+
+    }
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
+    if(length == 0) {
+        return 1;
+    }
+       else{
+           xy_to_bitval( 1ull<<x, 1ull<<y);
+
+           add_ship_horizontal(player,x+1,y,length-1);
+           //check if there is a ship on a position where the player is trying to put the ship
+           // the player has the information of the ship
+           //using the AND operator to check of that position on the board has been used or not.
+           // if so then i am returning -1  because it is invalid spec
+           if(player->ships & xy_to_bitval(x,y)){
+               return -1;
+           }
+           else{
+               player->ships ^ xy_to_bitval(x,y);
+               return 1;
+           }
+       }
+
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
 }
 
 int add_ship_vertical(player_info *player, int x, int y, int length) {
+    if(length == 0){
+        return 1;
+    }
+    else {
+        xy_to_bitval( 1ull<<x, 1ull<<y);
+                add_ship_horizontal(player,x, y+1,length-1);
+    }
+    if(player->ships & xy_to_bitval(x,y)){
+        return -1;
+    }
+    else{
+        player->ships ^ xy_to_bitval(x,y);
+        return 1;
+    }
+}
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
-}
