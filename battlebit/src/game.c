@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "game.h"
-#include "string.h"
+#include <string.h>
 
 // STEP 10 - Synchronization: the GAME structure will be accessed by both players interacting
 // asynchronously with the server.  Therefore the data must be protected to avoid race conditions.
@@ -75,21 +75,29 @@ int game_load_board(struct game *game, int player, char * spec) {
     // slot and return 1
     //
     // if it is invalid, you should return -1
-    int carrier = 5;
-    int battleship = 4;
-    int destroyer = 3;
-    int submarine = 3;
-    int patrolboat = 2;
 
     struct player_info * playerInfo = &game ->players[player];
 
-        //return the length of spec
-         int l =  strlen(spec);
-            if(NULL == spec){
+
+                //checks if the spec is null of is not equal to 15
+            if(NULL == spec|| strlen(spec) !=15){
                 return -1;
+
+            }
+               //check if the spec has any dublicates
+               // if so then return -1 because then board will overload
+            for(int i =0; i<= strlen(spec); i=i+3){
+                for(int j =j+1; j<=strlen(spec); j=j+3 ){
+                    if(spec[i] == spec[j])
+                    return -1;
+
+                }
+
+
             }
 
-    for (int i = 0; i <= 15; i = i + 3) {
+
+     for (int i = 0; i <= 15; i = i + 3) {
         char x = spec[i+1];
         int conXtonum = x - '0';
         char y = spec[i + 2];
