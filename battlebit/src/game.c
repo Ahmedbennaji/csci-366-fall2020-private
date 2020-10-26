@@ -78,11 +78,12 @@ int game_load_board(struct game *game, int player, char * spec) {
 
     struct player_info * playerInfo = &game ->players[player];
 
-
                 //checks if the spec is null of is not equal to 15
             if(NULL == spec|| strlen(spec) !=15){
                 return -1;
-
+            }
+            else{
+                return 1;
             }
                //check if the spec has any dublicates
                // if so then return -1 because then board will overload
@@ -90,12 +91,10 @@ int game_load_board(struct game *game, int player, char * spec) {
                //use array for numbers and assign them to chars
                  int array[5]= {'C','B','D','S','P'};
             for(int i =0; i<= sizeof(array); i++){
-                for(int j =j+1; j<=sizeof(array); j++ ){
+                for(int j =i+1; j<=sizeof(array); j++){
                     if(array[i] == array[j])
                     return -1;
-
                 }
-
 
             }
 
