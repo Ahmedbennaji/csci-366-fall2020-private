@@ -86,16 +86,18 @@ int game_load_board(struct game *game, int player, char * spec) {
             }
                //check if the spec has any dublicates
                // if so then return -1 because then board will overload
-            for(int i =0; i<= strlen(spec); i=i+3){
-                for(int j =j+1; j<=strlen(spec); j=j+3 ){
-                    if(spec[i] == spec[j])
+
+               //use array for numbers and assign them to chars
+                 int array[5]= {'C','B','D','S','P'};
+            for(int i =0; i<= sizeof(array); i++){
+                for(int j =j+1; j<=sizeof(array); j++ ){
+                    if(array[i] == array[j])
                     return -1;
 
                 }
 
 
             }
-
 
      for (int i = 0; i <= 15; i = i + 3) {
         char x = spec[i+1];
@@ -156,42 +158,43 @@ int add_ship_horizontal(player_info *player, int x, int y, int length) {
         return 1;
     }
        else{
-           xy_to_bitval( 1ull<<x, 1ull<<y);
+        unsigned long long int mask = xy_to_bitval(x, y);
 
-           add_ship_horizontal(player,x+1,y,length-1);
            //check if there is a ship on a position where the player is trying to put the ship
            // the player has the information of the ship
            //using the AND operator to check of that position on the board has been used or not.
            // if so then i am returning -1  because it is invalid spec
-           if(player->ships & xy_to_bitval(x,y)){
+           if(player->ships & mask){
                return -1;
            }
-           else{
-               player->ships ^ xy_to_bitval(x,y);
-               return 1;
+           else
+               {
+               player->ships = player->ships | mask;
+               return add_ship_horizontal(player, x + 1, y, length - 1);
            }
        }
-
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
 }
-
 int add_ship_vertical(player_info *player, int x, int y, int length) {
     if(length == 0){
         return 1;
     }
+
     else {
-        xy_to_bitval( 1ull<<x, 1ull<<y);
-                add_ship_horizontal(player,x, y+1,length-1);
+        unsigned  long long int mask = xy_to_bitval(x,y);
+        if(player->ships & mask) {
+            return -1;
+        } else{
+
+            player->ships = player->ships | mask;
+            return add_ship_vertical(player,x,y+1,length-1);
+        }
+
     }
-    if(player->ships & xy_to_bitval(x,y)){
-        return -1;
-    }
-    else{
-        player->ships ^ xy_to_bitval(x,y);
-        return 1;
-    }
+
+
 }
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
