@@ -79,12 +79,10 @@ int game_load_board(struct game *game, int player, char * spec) {
     struct player_info * playerInfo = &game ->players[player];
 
                 //checks if the spec is null of is not equal to 15
-            if(NULL == spec|| strlen(spec) !=15){
-                return -1;
-            }
-            else{
-                return 1;
-            }
+    if(NULL == spec|| strlen(spec) !=15){
+        return -1;
+    }
+
                //check if the spec has any dublicates
                // if so then return -1 because then board will overload
 
@@ -98,14 +96,18 @@ int game_load_board(struct game *game, int player, char * spec) {
 
             }
 
+
+
      for (int i = 0; i <= 15; i = i + 3) {
         char x = spec[i+1];
         int conXtonum = x - '0';
         char y = spec[i + 2];
         int contYtonum = y - '0';
+
         if (spec[i] == 'C'|| spec[i] =='c') {
             if(spec[i] == 'C'){
                 // check if C have been already been  added
+
                 add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5);
             }
             else{
