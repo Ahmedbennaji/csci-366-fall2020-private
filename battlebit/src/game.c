@@ -30,6 +30,29 @@ void game_init_player_info(player_info *player_info) {
 }
 
 int game_fire(game *game, int player, int x, int y) {
+ //  int opponent = (player +1) % 2;
+
+    unsigned long long int mask = xy_to_bitval(x,y);
+
+    // if player 1 shots
+    if(game->players[0].shots) {
+        //the oponents checks if is hit his ships
+
+        if (game->players[1].hits & mask) {
+            //update the player 1 shots as a hit
+            game->players[1].ships = 0;
+
+            return game->players[0].shots = game->players[0].shots & mask;
+
+        }
+        else{
+            //otherwise it is a miss
+            return 0;
+        }
+
+    }
+
+
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
     // update all the bit values that store our game state.
     //
