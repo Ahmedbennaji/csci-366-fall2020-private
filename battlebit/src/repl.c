@@ -99,24 +99,21 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
     //  you need to print an X.  If not, you need to print a space character ' '
 
 // for nested loop for column and row
-int column;
-int row;
-int x;
-int y;
-    for(int i = 0; i<=row; i++) {
-        for(int j = 7; j<=column; j++){
 
-            unsigned  long long  mask = xy_to_bitval(x,y);
-        if(player_info->ships & mask ) {
-            printf("*");
-        }
-            if(player_info->ships | mask) {
-                printf("");
-            }
+   // for(int i = 0; i<=8; i++) {
+    //   for(int j = 0; j<=8; j++){
 
 
-    }
-}
+   //     if(player_info->ships & mask ) {
+       //     printf("*");
+     //   }
+       //     if(player_info->ships | mask) {
+      //          printf("");
+       //     }
+
+
+  //  }
+//}
 //bitmask to check if there a ship
 // return x otherwise return ---
 

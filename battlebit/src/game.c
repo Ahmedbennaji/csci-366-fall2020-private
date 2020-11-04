@@ -30,29 +30,18 @@ void game_init_player_info(player_info *player_info) {
 }
 
 int game_fire(game *game, int player, int x, int y) {
- //  int opponent = (player +1) % 2;
-
-    unsigned long long int mask = xy_to_bitval(x,y);
-
-    // if player 1 shots
-    if(game->players[0].shots) {
-        //the oponents checks if is hit his ships
-
-        if (game->players[1].hits & mask) {
-            //update the player 1 shots as a hit
-            game->players[1].ships = 0;
-
-            return game->players[0].shots = game->players[0].shots & mask;
-
-        }
+    unsigned long long int mask = xy_to_bitval(x, y);
+    struct player_info *shooter = &game->players[player];
+    struct player_info *opponent = &game->players[(player + 1) % 2];
+        shooter->shots &= mask;
+        if (opponent->ships & mask) {
+                shooter->hits &= mask;
+                opponent->ships ^= mask;
+            return 1;
+            }
         else{
-            //otherwise it is a miss
             return 0;
         }
-
-    }
-
-
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
     // update all the bit values that store our game state.
     //
@@ -63,8 +52,8 @@ int game_fire(game *game, int player, int x, int y) {
     //
     //  If the opponents ships value is 0, they have no remaining ships, and you should set the game state to
     //  PLAYER_1_WINS or PLAYER_2_WINS depending on who won.
-}
 
+}
 unsigned long long int xy_to_bitval(int x, int y) {
     // Step 1 - implement this function.  We are taking an x, y position
     // and using bitwise operators, converting that to an unsigned long long
@@ -100,81 +89,121 @@ int game_load_board(struct game *game, int player, char * spec) {
     // if it is invalid, you should return -1
 
     struct player_info * playerInfo = &game ->players[player];
-
                 //checks if the spec is null of is not equal to 15
     if(NULL == spec|| strlen(spec) !=15){
         return -1;
     }
-
-               //check if the spec has any dublicates
-               // if so then return -1 because then board will overload
-
-               //use array for numbers and assign them to chars
-                 int array[5]= {'C','B','D','S','P'};
-            for(int i =0; i<= sizeof(array); i++){
-                for(int j =i+1; j<=sizeof(array); j++){
-                    if(array[i] == array[j])
-                    return -1;
-                }
-
-            }
-
-
+int seen_carrier;
+    int seen_battleship;
+    int seen_destroyer;
+    int seen_submarine;
+    int seen_patrol;
+    if(NULL == spec|| strlen(spec) !=15){
+        return -1;
+    }
 
      for (int i = 0; i <= 15; i = i + 3) {
         char x = spec[i+1];
         int conXtonum = x - '0';
         char y = spec[i + 2];
         int contYtonum = y - '0';
-
-        if (spec[i] == 'C'|| spec[i] =='c') {
+         if (spec[i] == 'C'|| spec[i] =='c') {
+            if ( seen_carrier == 1) {
+                return -1;
+            }
+            seen_carrier =1;
             if(spec[i] == 'C'){
-                // check if C have been already been  added
-
-                add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5);
+              //  add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5);
+                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5) == -1){
+                 return -1;
+                }
             }
             else{
-                add_ship_vertical(playerInfo,conXtonum,contYtonum,5);
+              //  add_ship_vertical(playerInfo,conXtonum,contYtonum,5);
+                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,5) == -1){
+                    return -1;
+                }
             }
 
         }
-
         if (spec[i] == 'B'|| spec[i]=='b') {
+            if(seen_battleship ==1){
+                return -1;
+            }
+            seen_battleship = 1;
             if(spec[i] =='B'){
-                add_ship_horizontal(playerInfo,conXtonum,contYtonum,4);
+               // add_ship_horizontal(playerInfo,conXtonum,contYtonum,4);
+                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,4) ==-1){
+                    return -1;
+                }
             }
             else{
-                add_ship_vertical(playerInfo,conXtonum,contYtonum,4);
+               // add_ship_vertical(playerInfo,conXtonum,contYtonum,4);
+                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,4)==-1){
+                    return-1;
+                }
             }
         }
 
         if (spec[i] == 'D'|| spec[i]=='d') {
+            if(seen_destroyer == 1){
+                return -1;
+            }
+            seen_destroyer = 1;
             if(spec[i]=='D'){
-                add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
+              //  add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
+                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,3)==-1){
+                    return -1;
+                }
             }
             else{
-                add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
+               // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
+                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
+                    return -1;
+                }
             }
         }
 
         if (spec[i] == 'S' || spec[i] == 's') {
+            if(seen_submarine == 1){
+                return -1;
+            }
+            seen_submarine = 1;
             if(spec[i]=='S'){
-                add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
+              //  add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
+                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,3)==-1){
+                    return -1;
+                }
             }
             else{
-                add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
+               // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
+                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
+                    return -1;
+                }
             }
         }
         if (spec[i] == 'P'||spec[i] =='p') {
+            if(seen_patrol == 1){
+                return -1;
+            }
+            seen_patrol = 1;
             if(spec[i] == 'P'){
-                add_ship_horizontal(playerInfo,conXtonum,contYtonum,2);
+                //add_ship_horizontal(playerInfo,conXtonum,contYtonum,2);
+                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,2)==-1){
+                    return -1;
+                }
             }
             else{
-                add_ship_vertical(playerInfo,conXtonum,contYtonum,2);
+                //add_ship_vertical(playerInfo,conXtonum,contYtonum,2);
+                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,2)==-1){
+                    return -1;
+                }
             }
         }
 
     }
+    return 1;
+
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
