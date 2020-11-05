@@ -110,7 +110,7 @@ int run_server() {
 
 int server_start() {
     init_server();
-  //  pthread_create(&tid1,NULL,run_server,NULL);
+  //      pthread_create(&tid1,NULL,run_server,NULL);
     // STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
     // interact with the game via the command line REPL
 }
