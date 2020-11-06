@@ -99,29 +99,32 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
     //  you need to print an X.  If not, you need to print a space character ' '
 
 // for nested loop for column and row
-         &player_info->ships;
-         &buffer->
+        unsigned long long mask;
 
-
-    for(int i = 0; i<=8; i++) {
-       for(int j = 0; j<=8; j++){
-
-
-    if(player_info->ships  &= buffer) {
-            printf("*");
-        }
-            if(player_info->ships ) {
-                printf("");
+    for (int i = 0; i <= 8; i++) {
+        cb_append_int(buffer, i);
+        cb_append(buffer, "*");
+        for (int j = 0; j <= 8; j++) {
+            mask = xy_to_bitval(i, j);
+            if(player_info->ships & mask){
+                cb_append(buffer, "*");
+            } else{
+                cb_append(buffer, " ");
             }
+        }
+    }
+
+              //  cb_append(buffer, " ");
+        }
 
 
-  //  }
-//}
-//bitmask to check if there a ship
-// return x otherwise return ---
 
 
-}
+
+
+
+
+
 
 void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) {
     // Step 6 - Implement this to print out a visual representation of the shots
