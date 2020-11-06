@@ -100,7 +100,6 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
 
 // for nested loop for column and row
         unsigned long long mask;
-
     cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
     for (int i = 0; i < BOARD_DIMENSION; i++) {
         cb_append_int(buffer, i);
@@ -118,15 +117,6 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
     }
 
         }
-
-
-
-
-
-
-
-
-
 
 void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) {
     // Step 6 - Implement this to print out a visual representation of the shots

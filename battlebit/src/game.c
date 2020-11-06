@@ -116,14 +116,14 @@ int game_load_board(struct game *game, int player, char * spec) {
                  return -1;
                 }
             }
-            else{
+            else {
               //  add_ship_vertical(playerInfo,conXtonum,contYtonum,5);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,5) == -1){
                     return -1;
                 }
             }
         }
-             else if (spec[i] == 'B'|| spec[i]=='b') {
+         else if (spec[i] == 'B'|| spec[i]=='b') {
             if(seen_battleship ==1){
                 return -1;
             }
@@ -134,7 +134,7 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else{
+            else {
                // add_ship_vertical(playerInfo,conXtonum,contYtonum,4);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,4)== -1){
                     return-1;
@@ -152,14 +152,14 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else{
+            else {
                // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
                 }
             }
         }
-        else if (spec[i] == 'S' || spec[i] == 's') {
+         else if (spec[i] == 'S' || spec[i] == 's') {
             if(seen_submarine == 1){
                 return -1;
             }
@@ -170,14 +170,14 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else{
+            else {
                // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
                 }
             }
         }
-        else if (spec[i] == 'P'||spec[i] =='p') {
+         else if (spec[i] == 'P'||spec[i] =='p') {
             if(seen_patrol == 1){
                 return -1;
             }
@@ -188,14 +188,15 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else{
+            else if (spec[i] == 'P'){
                 //add_ship_vertical(playerInfo,conXtonum,contYtonum,2);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,2)==-1){
                     return -1;
                 }
             }
+             return 1;
         }
-        else{
+         else{
              return -1;
         }
 
