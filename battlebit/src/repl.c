@@ -103,7 +103,7 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
 
     for (int i = 0; i <= 8; i++) {
         cb_append_int(buffer, i);
-        cb_append(buffer, "*");
+        cb_append(buffer, " ");
         for (int j = 0; j <= 8; j++) {
             mask = xy_to_bitval(i, j);
             if(player_info->ships & mask){
@@ -114,7 +114,6 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
         }
     }
 
-              //  cb_append(buffer, " ");
         }
 
 
@@ -133,4 +132,24 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
     // hits and shots values in the players game struct.  If a shot was fired at
     // a given spot and it was a hit, print 'H', if it was a miss, print 'M'.  If
     // no shot was taken at a position, print a space character ' '
+
+    unsigned long long mask;
+    for (int i = 0; i <= 8; i++) {
+        cb_append_int(buffer, i);
+        cb_append(buffer, " ");
+        for (int j = 0; j <= 8; j++) {
+            mask = xy_to_bitval(i, j);
+            if(player_info->shots & mask) {
+                cb_append(buffer, "H");
+            }
+            if(player_info->shots |mask){
+                cb_append(buffer, "M");
+            }
+            else{
+                cb_append(buffer, " ");
+            }
+        }
+    }
+
+
 }
