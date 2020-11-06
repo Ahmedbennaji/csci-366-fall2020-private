@@ -90,25 +90,23 @@ int game_load_board(struct game *game, int player, char * spec) {
 
     struct player_info * playerInfo = &game ->players[player];
                 //checks if the spec is null of is not equal to 15
-    if(NULL == spec|| strlen(spec) !=15){
-        return -1;
-    }
-int seen_carrier;
+
+    int  seen_carrier;
     int seen_battleship;
     int seen_destroyer;
     int seen_submarine;
     int seen_patrol;
+
     if(NULL == spec|| strlen(spec) !=15){
         return -1;
     }
-
      for (int i = 0; i <= 15; i = i + 3) {
         char x = spec[i+1];
         int conXtonum = x - '0';
         char y = spec[i + 2];
         int contYtonum = y - '0';
          if (spec[i] == 'C'|| spec[i] =='c') {
-            if ( seen_carrier == 1) {
+            if (seen_carrier == 1) {
                 return -1;
             }
             seen_carrier =1;
@@ -124,28 +122,26 @@ int seen_carrier;
                     return -1;
                 }
             }
-
         }
-        if (spec[i] == 'B'|| spec[i]=='b') {
+             else if (spec[i] == 'B'|| spec[i]=='b') {
             if(seen_battleship ==1){
                 return -1;
             }
             seen_battleship = 1;
             if(spec[i] =='B'){
                // add_ship_horizontal(playerInfo,conXtonum,contYtonum,4);
-                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,4) ==-1){
+                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,4) == -1){
                     return -1;
                 }
             }
             else{
                // add_ship_vertical(playerInfo,conXtonum,contYtonum,4);
-                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,4)==-1){
+                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,4)== -1){
                     return-1;
                 }
             }
         }
-
-        if (spec[i] == 'D'|| spec[i]=='d') {
+         else if (spec[i] == 'D'|| spec[i]=='d') {
             if(seen_destroyer == 1){
                 return -1;
             }
@@ -163,8 +159,7 @@ int seen_carrier;
                 }
             }
         }
-
-        if (spec[i] == 'S' || spec[i] == 's') {
+        else if (spec[i] == 'S' || spec[i] == 's') {
             if(seen_submarine == 1){
                 return -1;
             }
@@ -182,7 +177,7 @@ int seen_carrier;
                 }
             }
         }
-        if (spec[i] == 'P'||spec[i] =='p') {
+        else if (spec[i] == 'P'||spec[i] =='p') {
             if(seen_patrol == 1){
                 return -1;
             }
@@ -200,10 +195,12 @@ int seen_carrier;
                 }
             }
         }
+        else{
+             return -1;
+        }
 
     }
     return 1;
-
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
