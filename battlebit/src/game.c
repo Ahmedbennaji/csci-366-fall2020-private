@@ -33,15 +33,28 @@ int game_fire(game *game, int player, int x, int y) {
     unsigned long long int mask = xy_to_bitval(x, y);
     struct player_info *shooter = &game->players[player];
     struct player_info *opponent = &game->players[(player + 1) % 2];
+    game->status = PLAYER_0_TURN;
         shooter->shots &= mask;
         if (opponent->ships & mask) {
-                shooter->hits &= mask;
-                opponent->ships ^= mask;
+            shooter->hits &= mask;
+            opponent->ships ^= mask;
+            game->status = PLAYER_0_WINS;
             return 1;
-            }
+
+        }
+        game->status = PLAYER_1_TURN;
+        opponent->shots &=mask;
+        if(shooter->ships & mask){
+            opponent->hits &= mask;
+            shooter->ships ^= mask;
+            game->status = PLAYER_1_WINS;
+            return 1;
+        }
         else{
             return 0;
         }
+
+
 
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
     // update all the bit values that store our game state.
@@ -210,6 +223,12 @@ int game_load_board(struct game *game, int player, char * spec) {
         }
 
     }
+
+       if( game->players[0].ships ==1 && game->players[1].ships ==1)
+       {
+           game->status= PLAYER_0_TURN;
+
+       }
     return 1;
 }
 
