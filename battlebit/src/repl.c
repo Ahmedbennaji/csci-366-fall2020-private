@@ -101,11 +101,11 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
 // for nested loop for column and row
         unsigned long long mask;
     cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
-    for (int i = 0; i < BOARD_DIMENSION; i++) {
-        cb_append_int(buffer, i);
+    for (int row = 0; row < BOARD_DIMENSION; row++) {
+        cb_append_int(buffer, row);
         cb_append(buffer, " ");
-        for (int j = 0; j < BOARD_DIMENSION; j++) {
-            mask = xy_to_bitval(i, j);
+        for (int column = 0; column < BOARD_DIMENSION; column++) {
+            mask = xy_to_bitval(row, column);
             if(player_info->ships & mask){
                 cb_append(buffer, "*");
             } else{
@@ -126,13 +126,13 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
     // a given spot and it was a hit, print 'H', if it was a miss, print 'M'.  If
     // no shot was taken at a position, print a space character ' '
 
-    unsigned long long mask = 1;
+    unsigned long long mask ;
     cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
     for (int i = 0; i < BOARD_DIMENSION; i++) {
         cb_append_int(buffer, i);
         cb_append(buffer, " ");
         for (int j = 0; j < BOARD_DIMENSION; j++) {
-        //    mask = xy_to_bitval(i, j);
+            mask = xy_to_bitval(i, j);
             if(mask & player_info->hits ) {
                 cb_append(buffer, "H");
             }
@@ -143,6 +143,7 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
                 cb_append(buffer, " ");
             }
         }
+        cb_append(buffer, "\n");
     }
 
 

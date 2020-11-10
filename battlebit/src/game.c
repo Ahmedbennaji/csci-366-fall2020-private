@@ -42,6 +42,7 @@ int game_fire(game *game, int player, int x, int y) {
         else{
             return 0;
         }
+
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
     // update all the bit values that store our game state.
     //
@@ -87,6 +88,14 @@ int game_load_board(struct game *game, int player, char * spec) {
     // slot and return 1
     //
     // if it is invalid, you should return -1
+   &game->status;
+
+
+
+   // pGame->status
+
+
+
 
     struct player_info * playerInfo = &game ->players[player];
                 //checks if the spec is null of is not equal to 15
@@ -95,7 +104,7 @@ int game_load_board(struct game *game, int player, char * spec) {
     int seen_battleship;
     int seen_destroyer;
     int seen_submarine;
-    int seen_patrol;
+      int seen_patrol;
 
     if(NULL == spec|| strlen(spec) !=15){
         return -1;
@@ -113,10 +122,10 @@ int game_load_board(struct game *game, int player, char * spec) {
             if(spec[i] == 'C'){
               //  add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5);
                 if(add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5) == -1){
-                 return -1;
+                return -1;
                 }
             }
-            else {
+            else if(spec[i]=='c'){
               //  add_ship_vertical(playerInfo,conXtonum,contYtonum,5);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,5) == -1){
                     return -1;
@@ -134,7 +143,7 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else {
+            else if (spec[i] == 'b') {
                // add_ship_vertical(playerInfo,conXtonum,contYtonum,4);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,4)== -1){
                     return-1;
@@ -152,7 +161,7 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else {
+            else if (spec[i] == 'd'){
                // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
@@ -170,7 +179,7 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else {
+            else if(spec[i] == 's'){
                // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
@@ -178,7 +187,7 @@ int game_load_board(struct game *game, int player, char * spec) {
             }
         }
          else if (spec[i] == 'P'||spec[i] =='p') {
-            if(seen_patrol == 1){
+            if( seen_patrol == 1){
                 return -1;
             }
             seen_patrol = 1;
@@ -188,7 +197,7 @@ int game_load_board(struct game *game, int player, char * spec) {
                     return -1;
                 }
             }
-            else if (spec[i] == 'P'){
+            else if (spec[i] == 'p'){
                 //add_ship_vertical(playerInfo,conXtonum,contYtonum,2);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,2)==-1){
                     return -1;
@@ -205,21 +214,18 @@ int game_load_board(struct game *game, int player, char * spec) {
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
+    unsigned long long int mask = xy_to_bitval(x, y);
     if(length == 0) {
         return 1;
     }
-       else{
-        unsigned long long int mask = xy_to_bitval(x, y);
-
+    else if(player->ships & mask) {
+        return -1;
+    }
            //check if there is a ship on a position where the player is trying to put the ship
            // the player has the information of the ship
            //using the AND operator to check of that position on the board has been used or not.
            // if so then i am returning -1  because it is invalid spec
-           if(player->ships & mask){
-               return -1;
-           }
-           else
-               {
+    else{
                player->ships = player->ships | mask;
                return add_ship_horizontal(player, x + 1, y, length - 1);
            }
@@ -227,26 +233,24 @@ int add_ship_horizontal(player_info *player, int x, int y, int length) {
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
-}
 int add_ship_vertical(player_info *player, int x, int y, int length) {
+    unsigned  long long int mask = xy_to_bitval(x,y);
     if(length == 0){
         return 1;
     }
 
-    else {
-        unsigned  long long int mask = xy_to_bitval(x,y);
-        if(player->ships & mask) {
-            return -1;
-        } else{
+    else if (player->ships & mask){
+        return -1;
 
+        }
+
+    else{
             player->ships = player->ships | mask;
             return add_ship_vertical(player,x,y+1,length-1);
         }
 
     }
 
-
-}
     // implement this as part of Step 2
     // returns 1 if the ship can be added, -1 if not
     // hint: this can be defined recursively
