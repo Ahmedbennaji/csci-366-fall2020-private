@@ -105,7 +105,7 @@ void repl_print_ships(player_info *player_info, char_buff *buffer) {
         cb_append_int(buffer, row);
         cb_append(buffer, " ");
         for (int column = 0; column < BOARD_DIMENSION; column++) {
-            mask = xy_to_bitval(row, column);
+            mask = xy_to_bitval(column, row);
             if(player_info->ships & mask){
                 cb_append(buffer, "*");
             } else{
@@ -128,20 +128,21 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
 
     unsigned long long mask ;
     cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
-    for (int i = 0; i < BOARD_DIMENSION; i++) {
-        cb_append_int(buffer, i);
+    for (int row = 0; row < BOARD_DIMENSION; row++) {
+        cb_append_int(buffer, row);
         cb_append(buffer, " ");
-        for (int j = 0; j < BOARD_DIMENSION; j++) {
-            mask = xy_to_bitval(i, j);
-            if(mask & player_info->hits ) {
+        for (int column = 0; column< BOARD_DIMENSION; column++) {
+            mask = xy_to_bitval(column, row);
+            if(player_info->hits & mask  ) {
                 cb_append(buffer, "H");
             }
-           else if(mask & player_info->shots ){
+            else if(mask & player_info->shots ){
                 cb_append(buffer, "M");
             }
             else{
                 cb_append(buffer, " ");
             }
+           // cb_append(buffer, " ");
         }
         cb_append(buffer, "\n");
     }

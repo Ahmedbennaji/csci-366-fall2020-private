@@ -34,21 +34,21 @@ int game_fire(game *game, int player, int x, int y) {
     struct player_info *shooter = &game->players[player];
     struct player_info *opponent = &game->players[(player + 1) % 2];
 
-    game->status = PLAYER_0_TURN;
+;      game->status = PLAYER_0_WINS;
         if (opponent->ships & mask) {
             shooter->shots &= mask;
             shooter->hits &= mask;
             opponent->ships ^= mask;
-            game->status = PLAYER_0_WINS;
+
             return 1;
         }
         else if(shooter->ships & mask){
-            game->status = PLAYER_1_TURN;
             opponent->shots &=mask;
             opponent->hits &= mask;
             shooter->ships ^= mask;
             game->status = PLAYER_1_WINS;
-            return 1;
+
+           return 1;
         }
         else{
             return 0;
@@ -105,11 +105,11 @@ int game_load_board(struct game *game, int player, char * spec) {
     struct player_info * playerInfo = &game ->players[player];
                 //checks if the spec is null of is not equal to 15
 
-    int  seen_carrier =0 ;
-    int seen_battleship = 0;
-    int seen_destroyer = 0;
-    int seen_submarine =0;
-    int seen_patrol =0;
+    int  seen_carrier = 0 ;
+    int seen_battleship = 0 ;
+    int seen_destroyer  = 0;
+    int seen_submarine = 0;
+    int seen_patrol  = 0;
     if(NULL == spec|| strlen(spec) !=15){
         return -1;
     }
