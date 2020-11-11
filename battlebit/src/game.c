@@ -33,18 +33,18 @@ int game_fire(game *game, int player, int x, int y) {
     unsigned long long int mask = xy_to_bitval(x, y);
     struct player_info *shooter = &game->players[player];
     struct player_info *opponent = &game->players[(player + 1) % 2];
+
     game->status = PLAYER_0_TURN;
-        shooter->shots &= mask;
         if (opponent->ships & mask) {
+            shooter->shots &= mask;
             shooter->hits &= mask;
             opponent->ships ^= mask;
             game->status = PLAYER_0_WINS;
             return 1;
-
         }
-        game->status = PLAYER_1_TURN;
-        opponent->shots &=mask;
-        if(shooter->ships & mask){
+        else if(shooter->ships & mask){
+            game->status = PLAYER_1_TURN;
+            opponent->shots &=mask;
             opponent->hits &= mask;
             shooter->ships ^= mask;
             game->status = PLAYER_1_WINS;
@@ -101,24 +101,15 @@ int game_load_board(struct game *game, int player, char * spec) {
     // slot and return 1
     //
     // if it is invalid, you should return -1
-   &game->status;
-
-
-
-   // pGame->status
-
-
-
 
     struct player_info * playerInfo = &game ->players[player];
                 //checks if the spec is null of is not equal to 15
 
-    int  seen_carrier;
-    int seen_battleship;
-    int seen_destroyer;
-    int seen_submarine;
-      int seen_patrol;
-
+    int  seen_carrier =0 ;
+    int seen_battleship = 0;
+    int seen_destroyer = 0;
+    int seen_submarine =0;
+    int seen_patrol =0;
     if(NULL == spec|| strlen(spec) !=15){
         return -1;
     }
@@ -128,18 +119,17 @@ int game_load_board(struct game *game, int player, char * spec) {
         char y = spec[i + 2];
         int contYtonum = y - '0';
          if (spec[i] == 'C'|| spec[i] =='c') {
-            if (seen_carrier == 1) {
-                return -1;
-            }
-            seen_carrier =1;
+             if (seen_carrier == 1) {
+                 return -1;
+             }
+             seen_carrier =1;
             if(spec[i] == 'C'){
-              //  add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5);
                 if(add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5) == -1){
                 return -1;
                 }
+
             }
             else if(spec[i]=='c'){
-              //  add_ship_vertical(playerInfo,conXtonum,contYtonum,5);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,5) == -1){
                     return -1;
                 }
@@ -151,13 +141,11 @@ int game_load_board(struct game *game, int player, char * spec) {
             }
             seen_battleship = 1;
             if(spec[i] =='B'){
-               // add_ship_horizontal(playerInfo,conXtonum,contYtonum,4);
                 if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,4) == -1){
                     return -1;
                 }
             }
             else if (spec[i] == 'b') {
-               // add_ship_vertical(playerInfo,conXtonum,contYtonum,4);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,4)== -1){
                     return-1;
                 }
@@ -169,13 +157,11 @@ int game_load_board(struct game *game, int player, char * spec) {
             }
             seen_destroyer = 1;
             if(spec[i]=='D'){
-              //  add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
                 }
             }
             else if (spec[i] == 'd'){
-               // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
                 }
@@ -187,13 +173,11 @@ int game_load_board(struct game *game, int player, char * spec) {
             }
             seen_submarine = 1;
             if(spec[i]=='S'){
-              //  add_ship_horizontal(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
                 }
             }
             else if(spec[i] == 's'){
-               // add_ship_vertical(playerInfo,conXtonum,contYtonum,3);
                 if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
                     return -1;
                 }
@@ -224,20 +208,21 @@ int game_load_board(struct game *game, int player, char * spec) {
 
     }
 
-       if( game->players[0].ships ==1 && game->players[1].ships ==1)
+       if( (game->players[0].ships && game->players[1].ships)  == 1)
        {
-           game->status= PLAYER_0_TURN;
-
+           game->status= CREATED;
+           game->status = PLAYER_0_TURN;
+           return 1;
        }
     return 1;
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
     unsigned long long int mask = xy_to_bitval(x, y);
-    if(length == 0) {
+   if(length == 0) {
         return 1;
     }
-    else if(player->ships & mask) {
+      if(player->ships & mask) {
         return -1;
     }
            //check if there is a ship on a position where the player is trying to put the ship
