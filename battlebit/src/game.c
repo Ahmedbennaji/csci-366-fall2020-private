@@ -31,28 +31,29 @@ void game_init_player_info(player_info *player_info) {
 
 int game_fire(game *game, int player, int x, int y) {
     unsigned long long int mask = xy_to_bitval(x, y);
-    struct player_info *shooter = &game->players[player];
-    struct player_info *opponent = &game->players[(player + 1) % 2];
+    int opponent = (player + 1) % 2;
+    game->players[player].shots = game->players->shots | mask;
+    if (game->players[opponent].ships & mask) {
+        game->players[player].hits = game->players[player].hits | mask;
+        game->players[opponent].ships = game->players[opponent].ships & ~mask;
 
-;      game->status = PLAYER_0_WINS;
-        if (opponent->ships & mask) {
-            shooter->shots &= mask;
-            shooter->hits &= mask;
-            opponent->ships ^= mask;
+    }
+    if (game->players[opponent].ships == 0) {
+        return 0;
+    } else if (game->players[opponent].ships == 1) {
+        return 1;
 
-            return 1;
-        }
-        else if(shooter->ships & mask){
-            opponent->shots &=mask;
-            opponent->hits &= mask;
-            shooter->ships ^= mask;
-            game->status = PLAYER_1_WINS;
+    } else if (game->players[player].ships == 0) {
+        return 0;
+    } else if (game->players[player].ships == 1) {
+        return 1;
+          } else {
+          return 1;
+         }
 
-           return 1;
-        }
-        else{
-            return 0;
-        }
+
+
+    ;     // game->status = PLAYER_0_WINS;
 
 
 
