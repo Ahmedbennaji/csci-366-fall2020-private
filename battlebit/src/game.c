@@ -33,28 +33,36 @@ int game_fire(game *game, int player, int x, int y) {
     unsigned long long int mask = xy_to_bitval(x, y);
     int opponent = (player + 1) % 2;
     game->players[player].shots = game->players->shots | mask;
+
     if (game->players[opponent].ships & mask) {
         game->players[player].hits = game->players[player].hits | mask;
-        game->players[opponent].ships = game->players[opponent].ships & ~mask;
+        game->players[opponent].ships = game->players[opponent].ships &~ mask;
+    }
+
+    else{
+        return 0;
+    }
+
+    if (game->players[opponent].ships == 0) {
+        if(player == 0){
+        game->status = PLAYER_0_WINS;
 
     }
-    if (game->players[opponent].ships == 0) {
-        return 0;
-    } else if (game->players[opponent].ships == 1) {
-        return 1;
+        if(player == 1){
+            game->status = PLAYER_1_WINS;
+        }
+    } else{
+        if(player == 0){
+            game->status = PLAYER_1_TURN;
+        }
+        if(player == 1){
+            game->status = PLAYER_0_TURN;
 
-    } else if (game->players[player].ships == 0) {
-        return 0;
-    } else if (game->players[player].ships == 1) {
-        return 1;
-          } else {
-          return 1;
-         }
+        }
 
+    }
 
-
-    ;     // game->status = PLAYER_0_WINS;
-
+    return 1;
 
 
     // Step 5 - This is the crux of the game.  You are going to take a shot from the given player and
@@ -84,7 +92,13 @@ unsigned long long int xy_to_bitval(int x, int y) {
 
     unsigned long long value = 1ull <<x;
     value = 1ull << (y*8+x);
-    return value;
+
+    if(x == 8 || y == 8 || x == -1 || y == -1){
+        return 0;
+    }
+    else {
+        return value;
+    }
 }
 
 struct game * game_get_current() {
@@ -106,11 +120,11 @@ int game_load_board(struct game *game, int player, char * spec) {
     struct player_info * playerInfo = &game ->players[player];
                 //checks if the spec is null of is not equal to 15
 
-    int  seen_carrier = 0 ;
-    int seen_battleship = 0 ;
-    int seen_destroyer  = 0;
-    int seen_submarine = 0;
-    int seen_patrol  = 0;
+    int  seen_carrier ;
+    int seen_battleship  ;
+    int seen_destroyer  ;
+    int seen_submarine ;
+    int seen_patrol  ;
     if(NULL == spec|| strlen(spec) !=15){
         return -1;
     }
@@ -208,14 +222,14 @@ int game_load_board(struct game *game, int player, char * spec) {
         }
 
     }
-
-       if( (game->players[0].ships && game->players[1].ships)  == 1)
-       {
-           game->status= CREATED;
-           game->status = PLAYER_0_TURN;
-           return 1;
-       }
     return 1;
+    //   if( (game->players[0].ships && game->players[1].ships)  == 1)
+      // {
+         //  game->status= CREATED;
+          // game->status = PLAYER_0_TURN;
+         //  return 1;
+     //  }
+
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
