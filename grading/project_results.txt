@@ -65,14 +65,14 @@ Expected equality of these values:
   game_fire(gameon,0,0,0)
     Which is: 0
   1
-[  FAILED  ] game_fire.hit_fire2 (0 ms)
+[  FAILED  ] game_fire.hit_fire2 (1 ms)
 [ RUN      ] game_fire.miss_fire
 [       OK ] game_fire.miss_fire (0 ms)
 [ RUN      ] game_fire.miss_fire2
 [       OK ] game_fire.miss_fire2 (0 ms)
 [ RUN      ] game_fire.invalid_fire
 [       OK ] game_fire.invalid_fire (0 ms)
-[----------] 6 tests from game_fire (0 ms total)
+[----------] 6 tests from game_fire (1 ms total)
 
 [----------] 2 tests from add_ship_horizontal
 [ RUN      ] add_ship_horizontal.empty_ship
@@ -148,7 +148,7 @@ With diff:
 +6                 
 +7                 \n
 
-[  FAILED  ] repl_print_hits.print_hits (1 ms)
+[  FAILED  ] repl_print_hits.print_hits (0 ms)
 [ RUN      ] repl_print_hits.print_miss
 /home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/repl.cpp:74: Failure
 Expected equality of these values:
@@ -177,7 +177,7 @@ With diff:
 +7 M               \n
 
 [  FAILED  ] repl_print_hits.print_miss (0 ms)
-[----------] 2 tests from repl_print_hits (1 ms total)
+[----------] 2 tests from repl_print_hits (0 ms total)
 
 [----------] Global test environment tear-down
 [==========] 23 tests from 9 test suites ran. (1 ms total)
