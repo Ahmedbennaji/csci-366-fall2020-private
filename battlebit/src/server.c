@@ -25,6 +25,48 @@ void init_server() {
 }
 
 int handle_client_connect(int player) {
+    int client_socket_fd = SERVER->player_sockets[player];
+    char raw_buffer[2000];
+    char_buff *input_buffer = cb_create(2000);
+    char_buff *output_buffer = cb_create(2000);
+    int read_size;
+    cb_append(output_buffer, "\nbattleBit (? for help) > ");
+    cb_write(client_socket_fd,output_buffer);
+
+    while ((read_size = recv(client_socket_fd,raw_buffer,2000,0))>0){
+        //reset our buffers
+        cb_reset(output_buffer);
+        cb_reset(input_buffer);
+        if(read_size< 0) {
+            raw_buffer[read_size]= '\0'; // null terminate read
+
+            // append to input buffer
+            cb_append(input_buffer,raw_buffer);
+
+            //tokenize
+            char *command = cb_tokenize(input_buffer," \r\n");
+            if(strcmp(command, "help") ==0) {
+                //create output
+                cb_append(output_buffer, "A useful help message... ");
+                cb_append(output_buffer, command);
+                //output it
+                cb_write(client_socket_fd, output_buffer);
+            } else if (strcmp(command, "quit") == 0) {
+                close(client_socket_fd);
+
+            }else if (command != NULL) {
+                //CREATE Output
+                cb_append(output_buffer,"Command was:");
+                cb_append(output_buffer,command);
+                //output it
+                cb_write(client_socket_fd, output_buffer);
+            }
+            cb_reset(output_buffer);
+            cb_append(output_buffer,"\nbattleBit (? for help)> ");
+            cb_write(client_socket_fd,output_buffer);
+        }
+    }
+
 
     // STEP 9 - This is the big one: you will need to re-implement the REPL code from
     // the repl.c file, but with a twist: you need to make sure that a player only
@@ -85,10 +127,22 @@ int run_server() {
         socklen_t size_from_connect;
         int client_socket_fd;
         int request_count = 0;
+        int player = 0;
         while ((client_socket_fd = accept(server_socket_fd,
                                           (struct sockaddr *) &client,
                                           &size_from_connect)) > 0) {
             char message[100] = {0};
+
+
+       SERVER->player_sockets[0] = pthread_create(&SERVER->player_threads[0],NULL,handle_client_connect,0);
+            player++;
+
+            SERVER->player_sockets[1] = pthread_create(&SERVER->player_threads[1],NULL,handle_client_connect,1);
+            if(player > 1){
+                break;
+            }
+
+
             sprintf(message,
                     "Thank you for coming, come again - req %d\n\n",
                     request_count++);
@@ -97,6 +151,7 @@ int run_server() {
             close(client_socket_fd);
         }
     }
+
 
     // STEP 8 - implement the server code to put this on the network.
     // Here you will need to initalize a server socket and wait for incoming connections.
@@ -108,9 +163,24 @@ int run_server() {
     // so they can interact with the server asynchronously
 }
 
+struct game_server * server_create() {
+    struct game_server * server = malloc(sizeof(struct game_server));
+
+    //(&server->player_threads[0],NULL,handle_client_connect,0);
+    //pthread_create(&server->player_threads[1],NULL,handle_client_connect,1);
+   // pthread_create(&server->player_sockets[0],NULL,handle_client_connect,0);
+  //  pthread_create(&server->player_sockets[1],NULL,handle_client_connect,1);
+
+
+    return server;
+}
+
 int server_start() {
     init_server();
-  //      pthread_create(&tid1,NULL,run_server,NULL);
+
+    SERVER = server_create();
+       pthread_create(&SERVER->server_thread,NULL,run_server,NULL);
+
     // STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
     // interact with the game via the command line REPL
 }

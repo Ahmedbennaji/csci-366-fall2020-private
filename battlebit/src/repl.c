@@ -136,7 +136,7 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
             if(player_info->hits & mask  ) {
                 cb_append(buffer, "H");
             }
-            else if(mask & player_info->shots ){
+            else if(mask & player_info->shots | mask ){
                 cb_append(buffer, "M");
             }
             else{

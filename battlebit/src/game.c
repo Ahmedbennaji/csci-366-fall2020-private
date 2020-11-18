@@ -222,14 +222,14 @@ int game_load_board(struct game *game, int player, char * spec) {
         }
 
     }
-    return 1;
-    //   if( (game->players[0].ships && game->players[1].ships)  == 1)
-      // {
-         //  game->status= CREATED;
-          // game->status = PLAYER_0_TURN;
-         //  return 1;
-     //  }
 
+      if( (game->players[0].ships && game->players[1].ships)  == 1)
+       {
+           game->status= CREATED;
+
+          return 1;
+       }
+    return 1;
 }
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
