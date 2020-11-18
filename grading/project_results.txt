@@ -39,10 +39,19 @@ string: Foo
 [ RUN      ] game_fire.miss_fire
 [       OK ] game_fire.miss_fire (0 ms)
 [ RUN      ] game_fire.miss_fire2
+  0 1 2 3 4 5 6 7
+0 1 0 0 0 0 0 0 0
+1 1 0 0 0 0 0 1 1
+2 1 0 0 0 0 0 0 0
+3 1 0 1 0 0 0 0 0
+4 1 0 1 0 0 0 0 0
+5 0 0 1 0 0 0 0 1
+6 0 0 0 0 0 0 0 1
+7 1 1 1 1 0 0 0 1
 [       OK ] game_fire.miss_fire2 (0 ms)
 [ RUN      ] game_fire.invalid_fire
 [       OK ] game_fire.invalid_fire (0 ms)
-[----------] 6 tests from game_fire (1 ms total)
+[----------] 6 tests from game_fire (0 ms total)
 
 [----------] 2 tests from add_ship_horizontal
 [ RUN      ] add_ship_horizontal.empty_ship
@@ -69,7 +78,7 @@ string: Foo
 
 [----------] 1 test from game_status
 [ RUN      ] game_status.is_correct
-/home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/game.cpp:316: Failure
+/home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/game.cpp:318: Failure
 Expected equality of these values:
   game_load_board(pGame, 0, spec)
     Which is: -1
@@ -82,27 +91,27 @@ Expected equality of these values:
 [       OK ] repl_print_ships.print_ships (0 ms)
 [ RUN      ] repl_print_ships.print_ship_status
 [       OK ] repl_print_ships.print_ship_status (0 ms)
-[----------] 2 tests from repl_print_ships (1 ms total)
+[----------] 2 tests from repl_print_ships (0 ms total)
 
 [----------] 2 tests from repl_print_hits
 [ RUN      ] repl_print_hits.print_hits
 /home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/repl.cpp:50: Failure
 Expected equality of these values:
   buffer->buffer
-    Which is: "  0 1 2 3 4 5 6 7 \n0 M       \n1         \n2         \n3         \n4         \n5         \n6         \n7         \n"
+    Which is: "  0 1 2 3 4 5 6 7 \n0 MMMMMMMM\n1 MMMMMMMM\n2 MMMMMMMM\n3 MMMMMMMM\n4 MMMMMMMM\n5 MMMMMMMM\n6 MMMMMMMM\n7 MMMMMMMM\n"
   expected
     Which is: "  0 1 2 3 4 5 6 7 \n0 H               \n1                 \n2                 \n3                 \n4                 \n5                 \n6                 \n7                 \n"
 With diff:
 @@ -1,9 +1,9 @@
    0 1 2 3 4 5 6 7 
--0 M       
--1         
--2         
--3         
--4         
--5         
--6         
--7         \n
+-0 MMMMMMMM
+-1 MMMMMMMM
+-2 MMMMMMMM
+-3 MMMMMMMM
+-4 MMMMMMMM
+-5 MMMMMMMM
+-6 MMMMMMMM
+-7 MMMMMMMM\n
 +0 H               
 +1                 
 +2                 
@@ -117,20 +126,20 @@ With diff:
 /home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/repl.cpp:74: Failure
 Expected equality of these values:
   buffer->buffer
-    Which is: "  0 1 2 3 4 5 6 7 \n0         \n1         \n2         \n3         \n4         \n5         \n6         \n7 M       \n"
+    Which is: "  0 1 2 3 4 5 6 7 \n0 MMMMMMMM\n1 MMMMMMMM\n2 MMMMMMMM\n3 MMMMMMMM\n4 MMMMMMMM\n5 MMMMMMMM\n6 MMMMMMMM\n7 MMMMMMMM\n"
   expected
     Which is: "  0 1 2 3 4 5 6 7 \n0                 \n1                 \n2                 \n3                 \n4                 \n5                 \n6                 \n7 M               \n"
 With diff:
 @@ -1,9 +1,9 @@
    0 1 2 3 4 5 6 7 
--0         
--1         
--2         
--3         
--4         
--5         
--6         
--7 M       \n
+-0 MMMMMMMM
+-1 MMMMMMMM
+-2 MMMMMMMM
+-3 MMMMMMMM
+-4 MMMMMMMM
+-5 MMMMMMMM
+-6 MMMMMMMM
+-7 MMMMMMMM\n
 +0                 
 +1                 
 +2                 
@@ -144,7 +153,7 @@ With diff:
 [----------] 2 tests from repl_print_hits (0 ms total)
 
 [----------] Global test environment tear-down
-[==========] 23 tests from 9 test suites ran. (3 ms total)
+[==========] 23 tests from 9 test suites ran. (0 ms total)
 [  PASSED  ] 20 tests.
 [  FAILED  ] 3 tests, listed below:
 [  FAILED  ] game_status.is_correct
