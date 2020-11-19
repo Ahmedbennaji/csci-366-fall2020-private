@@ -126,23 +126,25 @@ void repl_print_hits(struct player_info *player_info, struct char_buff *buffer) 
     // a given spot and it was a hit, print 'H', if it was a miss, print 'M'.  If
     // no shot was taken at a position, print a space character ' '
 
-    unsigned long long mask ;
+
     cb_append(buffer, "  0 1 2 3 4 5 6 7 \n");
+    unsigned long long mask = 1ull;
     for (int row = 0; row < BOARD_DIMENSION; row++) {
         cb_append_int(buffer, row);
         cb_append(buffer, " ");
         for (int column = 0; column< BOARD_DIMENSION; column++) {
-            mask = xy_to_bitval(column, row);
             if(player_info->hits & mask  ) {
                 cb_append(buffer, "H");
             }
-            else if(mask & player_info->shots | mask ){
+            else if(player_info->shots & mask ){
+
                 cb_append(buffer, "M");
             }
             else{
                 cb_append(buffer, " ");
             }
-           // cb_append(buffer, " ");
+            cb_append(buffer, " ");
+            mask = mask << 1ull;
         }
         cb_append(buffer, "\n");
     }

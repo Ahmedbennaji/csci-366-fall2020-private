@@ -131,56 +131,60 @@ int run_server() {
         while ((client_socket_fd = accept(server_socket_fd,
                                           (struct sockaddr *) &client,
                                           &size_from_connect)) > 0) {
-            char message[100] = {0};
+            // char message[100] = {0};
 
 
-       SERVER->player_sockets[0] = pthread_create(&SERVER->player_threads[0],NULL,handle_client_connect,0);
+            SERVER->player_sockets[0] = pthread_create(&SERVER->player_threads[0], NULL, (void *) handle_client_connect,
+                                                       0);
             player++;
 
-            SERVER->player_sockets[1] = pthread_create(&SERVER->player_threads[1],NULL,handle_client_connect,1);
-            if(player > 1){
+            SERVER->player_sockets[1] = pthread_create(&SERVER->player_threads[1], NULL, (void *) handle_client_connect,
+                                                       1);
+
+            if (player > 1) {
                 break;
             }
 
 
-            sprintf(message,
-                    "Thank you for coming, come again - req %d\n\n",
-                    request_count++);
-            send(client_socket_fd, message,
-                 strlen(message), 0);
-            close(client_socket_fd);
+            // sprintf(message,
+            //    "Welcome to the game Player  - req %d\n\n",
+            //   request_count++);
+            //send(client_socket_fd, message,
+            //  strlen(message), 0);
+                close(client_socket_fd);
+            // }
         }
+
+
+        // STEP 8 - implement the server code to put this on the network.
+        // Here you will need to initalize a server socket and wait for incoming connections.
+        //
+        // When a connection occurs, store the corresponding new client socket in the SERVER.player_sockets array
+        // as the corresponding player position.
+        //
+        // You will then create a thread running handle_client_connect, passing the player number out
+        // so they can interact with the server asynchronously
+    }
+}
+
+    struct game_server *server_create() {
+        struct game_server *server = malloc(sizeof(struct game_server));
+
+        //(&server->player_threads[0],NULL,handle_client_connect,0);
+        //pthread_create(&server->player_threads[1],NULL,handle_client_connect,1);
+        // pthread_create(&server->player_sockets[0],NULL,handle_client_connect,0);
+        //  pthread_create(&server->player_sockets[1],NULL,handle_client_connect,1);
+
+
+        return server;
     }
 
+    int server_start() {
+        init_server();
 
-    // STEP 8 - implement the server code to put this on the network.
-    // Here you will need to initalize a server socket and wait for incoming connections.
-    //
-    // When a connection occurs, store the corresponding new client socket in the SERVER.player_sockets array
-    // as the corresponding player position.
-    //
-    // You will then create a thread running handle_client_connect, passing the player number out
-    // so they can interact with the server asynchronously
-}
+        SERVER = server_create();
+        pthread_create(&SERVER->server_thread, NULL, (void *) run_server, NULL);
 
-struct game_server * server_create() {
-    struct game_server * server = malloc(sizeof(struct game_server));
-
-    //(&server->player_threads[0],NULL,handle_client_connect,0);
-    //pthread_create(&server->player_threads[1],NULL,handle_client_connect,1);
-   // pthread_create(&server->player_sockets[0],NULL,handle_client_connect,0);
-  //  pthread_create(&server->player_sockets[1],NULL,handle_client_connect,1);
-
-
-    return server;
-}
-
-int server_start() {
-    init_server();
-
-    SERVER = server_create();
-       pthread_create(&SERVER->server_thread,NULL,run_server,NULL);
-
-    // STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
-    // interact with the game via the command line REPL
-}
+        // STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
+        // interact with the game via the command line REPL
+    }

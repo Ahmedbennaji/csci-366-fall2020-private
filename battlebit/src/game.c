@@ -36,7 +36,7 @@ int game_fire(game *game, int player, int x, int y) {
 
     if (game->players[opponent].ships & mask) {
         game->players[player].hits = game->players[player].hits | mask;
-        game->players[opponent].ships = game->players[opponent].ships &~ mask;
+        game->players[opponent].ships = game->players[opponent].ships ^= mask;
     }
 
     else{
@@ -44,21 +44,24 @@ int game_fire(game *game, int player, int x, int y) {
     }
 
     if (game->players[opponent].ships == 0) {
-        if(player == 0){
-        game->status = PLAYER_0_WINS;
+        if(player == 1){
+            GAME->status = PLAYER_1_WINS;
+        }
 
+        if(player == 0){
+        GAME->status = PLAYER_0_WINS;
     }
-        if(player == 1){
-            game->status = PLAYER_1_WINS;
-        }
+
     } else{
-        if(player == 0){
-            game->status = PLAYER_1_TURN;
-        }
         if(player == 1){
-            game->status = PLAYER_0_TURN;
+            GAME->status = PLAYER_0_TURN;
 
         }
+        if(player == 0){
+            GAME->status = PLAYER_1_TURN;
+        }
+
+        return 1;
 
     }
 
@@ -117,126 +120,131 @@ int game_load_board(struct game *game, int player, char * spec) {
     //
     // if it is invalid, you should return -1
 
-    struct player_info * playerInfo = &game ->players[player];
-                //checks if the spec is null of is not equal to 15
+    struct player_info *playerInfo = &game->players[player];
+    int opponent = (player + 1) % 2;
+    //checks if the spec is null of is not equal to 15
 
-    int  seen_carrier ;
-    int seen_battleship  ;
-    int seen_destroyer  ;
-    int seen_submarine ;
-    int seen_patrol  ;
-    if(NULL == spec|| strlen(spec) !=15){
+    int seen_carrier = 0;
+    int seen_battleship = 0;
+    int seen_destroyer = 0;
+    int seen_submarine = 0;
+    int seen_patrol = 0;
+    if (NULL == spec || strlen(spec) != 15) {
         return -1;
     }
-     for (int i = 0; i <= 15; i = i + 3) {
-        char x = spec[i+1];
+    for (int i = 0; i <= 15; i = i + 3) {
+        char x = spec[i + 1];
         int conXtonum = x - '0';
         char y = spec[i + 2];
         int contYtonum = y - '0';
-         if (spec[i] == 'C'|| spec[i] =='c') {
-             if (seen_carrier == 1) {
-                 return -1;
-             }
-             seen_carrier =1;
-            if(spec[i] == 'C'){
-                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum, 5) == -1){
+        if (spec[i] == 'C' || spec[i] == 'c') {
+            if (seen_carrier == 1) {
                 return -1;
+            }
+            seen_carrier = 1;
+            if (spec[i] == 'C') {
+                if (add_ship_horizontal(playerInfo, conXtonum, contYtonum, 5) == -1) {
+                    return -1;
                 }
 
-            }
-            else if(spec[i]=='c'){
-                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,5) == -1){
+            } else if (spec[i] == 'c') {
+                if (add_ship_vertical(playerInfo, conXtonum, contYtonum, 5) == -1) {
                     return -1;
                 }
             }
-        }
-         else if (spec[i] == 'B'|| spec[i]=='b') {
-            if(seen_battleship ==1){
+        } else if (spec[i] == 'B' || spec[i] == 'b') {
+            if (seen_battleship == 1) {
                 return -1;
             }
             seen_battleship = 1;
-            if(spec[i] =='B'){
-                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,4) == -1){
+            if (spec[i] == 'B') {
+                if (add_ship_horizontal(playerInfo, conXtonum, contYtonum, 4) == -1) {
+                    return -1;
+                }
+            } else if (spec[i] == 'b') {
+                if (add_ship_vertical(playerInfo, conXtonum, contYtonum, 4) == -1) {
                     return -1;
                 }
             }
-            else if (spec[i] == 'b') {
-                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,4)== -1){
-                    return-1;
-                }
-            }
-        }
-         else if (spec[i] == 'D'|| spec[i]=='d') {
-            if(seen_destroyer == 1){
+        } else if (spec[i] == 'D' || spec[i] == 'd') {
+            if (seen_destroyer == 1) {
                 return -1;
             }
             seen_destroyer = 1;
-            if(spec[i]=='D'){
-                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,3)==-1){
+            if (spec[i] == 'D') {
+                if (add_ship_horizontal(playerInfo, conXtonum, contYtonum, 3) == -1) {
+                    return -1;
+                }
+            } else if (spec[i] == 'd') {
+                if (add_ship_vertical(playerInfo, conXtonum, contYtonum, 3) == -1) {
                     return -1;
                 }
             }
-            else if (spec[i] == 'd'){
-                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
-                    return -1;
-                }
-            }
-        }
-         else if (spec[i] == 'S' || spec[i] == 's') {
-            if(seen_submarine == 1){
+        } else if (spec[i] == 'S' || spec[i] == 's') {
+            if (seen_submarine == 1) {
                 return -1;
             }
             seen_submarine = 1;
-            if(spec[i]=='S'){
-                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,3)==-1){
+            if (spec[i] == 'S') {
+                if (add_ship_horizontal(playerInfo, conXtonum, contYtonum, 3) == -1) {
+                    return -1;
+                }
+            } else if (spec[i] == 's') {
+                if (add_ship_vertical(playerInfo, conXtonum, contYtonum, 3) == -1) {
                     return -1;
                 }
             }
-            else if(spec[i] == 's'){
-                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,3)==-1){
-                    return -1;
-                }
-            }
-        }
-         else if (spec[i] == 'P'||spec[i] =='p') {
-            if( seen_patrol == 1){
+        } else if (spec[i] == 'P' || spec[i] == 'p') {
+            if (seen_patrol == 1) {
                 return -1;
             }
             seen_patrol = 1;
-            if(spec[i] == 'P'){
-                //add_ship_horizontal(playerInfo,conXtonum,contYtonum,2);
-                if(add_ship_horizontal(playerInfo,conXtonum,contYtonum,2)==-1){
+            if (spec[i] == 'P') {
+
+                if (add_ship_horizontal(playerInfo, conXtonum, contYtonum, 2) == -1) {
+                    return -1;
+                }
+            } else { // (spec[i] == 'p'){
+                if (add_ship_vertical(playerInfo, conXtonum, contYtonum, 2) == -1) {
                     return -1;
                 }
             }
-            else if (spec[i] == 'p'){
-                //add_ship_vertical(playerInfo,conXtonum,contYtonum,2);
-                if(add_ship_vertical(playerInfo,conXtonum,contYtonum,2)==-1){
-                    return -1;
-                }
-            }
-             return 1;
+            return 1;
+
+        } else {
+            return -1;
         }
-         else{
-             return -1;
+        if (game->players[player].ships != 0 && game->players[opponent].ships != 0) {
+            GAME->status = PLAYER_0_TURN;
         }
 
     }
 
-      if( (game->players[0].ships && game->players[1].ships)  == 1)
-       {
-           game->status= CREATED;
+    // if(game->players[0].ships ==1 && game->players[1].ships == 1){
+    //  game->status = PLAYER_0_TURN;
+    // }
+    //  if(game->players[0].ships == 1){
+    //   game->status = PLAYER_0_TURN;
+    //}
+    //'else if(game->players[1].ships ==1){
+    //  game->status = PLAYER_1_TURN;
+    // }
 
-          return 1;
-       }
-    return 1;
-}
+
+
+        return 1;
+
+    }
+
 
 int add_ship_horizontal(player_info *player, int x, int y, int length) {
     unsigned long long int mask = xy_to_bitval(x, y);
    if(length == 0) {
         return 1;
     }
+   if (mask == 0){
+       return -1;
+   }
       if(player->ships & mask) {
         return -1;
     }
@@ -257,7 +265,9 @@ int add_ship_vertical(player_info *player, int x, int y, int length) {
     if(length == 0){
         return 1;
     }
-
+        if (mask == 0){
+            return -1;
+        }
     else if (player->ships & mask){
         return -1;
 
