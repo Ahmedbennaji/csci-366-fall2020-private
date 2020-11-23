@@ -78,12 +78,7 @@ string: Foo
 
 [----------] 1 test from game_status
 [ RUN      ] game_status.is_correct
-/home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/game.cpp:318: Failure
-Expected equality of these values:
-  game_load_board(pGame, 0, spec)
-    Which is: -1
-  1
-[  FAILED  ] game_status.is_correct (0 ms)
+[       OK ] game_status.is_correct (0 ms)
 [----------] 1 test from game_status (0 ms total)
 
 [----------] 2 tests from repl_print_ships
@@ -95,69 +90,11 @@ Expected equality of these values:
 
 [----------] 2 tests from repl_print_hits
 [ RUN      ] repl_print_hits.print_hits
-/home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/repl.cpp:50: Failure
-Expected equality of these values:
-  buffer->buffer
-    Which is: "  0 1 2 3 4 5 6 7 \n0 MMMMMMMM\n1 MMMMMMMM\n2 MMMMMMMM\n3 MMMMMMMM\n4 MMMMMMMM\n5 MMMMMMMM\n6 MMMMMMMM\n7 MMMMMMMM\n"
-  expected
-    Which is: "  0 1 2 3 4 5 6 7 \n0 H               \n1                 \n2                 \n3                 \n4                 \n5                 \n6                 \n7                 \n"
-With diff:
-@@ -1,9 +1,9 @@
-   0 1 2 3 4 5 6 7 
--0 MMMMMMMM
--1 MMMMMMMM
--2 MMMMMMMM
--3 MMMMMMMM
--4 MMMMMMMM
--5 MMMMMMMM
--6 MMMMMMMM
--7 MMMMMMMM\n
-+0 H               
-+1                 
-+2                 
-+3                 
-+4                 
-+5                 
-+6                 
-+7                 \n
-
-[  FAILED  ] repl_print_hits.print_hits (0 ms)
+[       OK ] repl_print_hits.print_hits (0 ms)
 [ RUN      ] repl_print_hits.print_miss
-/home/carson/Projects/msu/csci-366-fall2020/grading/scripts/repos/ahmed_naji/battlebit/googletest/repl.cpp:74: Failure
-Expected equality of these values:
-  buffer->buffer
-    Which is: "  0 1 2 3 4 5 6 7 \n0 MMMMMMMM\n1 MMMMMMMM\n2 MMMMMMMM\n3 MMMMMMMM\n4 MMMMMMMM\n5 MMMMMMMM\n6 MMMMMMMM\n7 MMMMMMMM\n"
-  expected
-    Which is: "  0 1 2 3 4 5 6 7 \n0                 \n1                 \n2                 \n3                 \n4                 \n5                 \n6                 \n7 M               \n"
-With diff:
-@@ -1,9 +1,9 @@
-   0 1 2 3 4 5 6 7 
--0 MMMMMMMM
--1 MMMMMMMM
--2 MMMMMMMM
--3 MMMMMMMM
--4 MMMMMMMM
--5 MMMMMMMM
--6 MMMMMMMM
--7 MMMMMMMM\n
-+0                 
-+1                 
-+2                 
-+3                 
-+4                 
-+5                 
-+6                 
-+7 M               \n
-
-[  FAILED  ] repl_print_hits.print_miss (0 ms)
+[       OK ] repl_print_hits.print_miss (0 ms)
 [----------] 2 tests from repl_print_hits (0 ms total)
 
 [----------] Global test environment tear-down
 [==========] 23 tests from 9 test suites ran. (0 ms total)
-[  PASSED  ] 20 tests.
-[  FAILED  ] 3 tests, listed below:
-[  FAILED  ] game_status.is_correct
-[  FAILED  ] repl_print_hits.print_hits
-[  FAILED  ] repl_print_hits.print_miss
-
- 3 FAILED TESTS
+[  PASSED  ] 23 tests.
