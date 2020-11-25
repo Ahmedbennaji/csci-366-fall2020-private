@@ -214,7 +214,7 @@ int game_load_board(struct game *game, int player, char * spec) {
         } else {
             return -1;
         }
-        if (game->players[player].ships != 0 && game->players[opponent].ships != 0) {
+        if (game->players[player].ships !=0 && game->players[opponent].ships != 0) {
             GAME->status = PLAYER_0_TURN;
         }
 

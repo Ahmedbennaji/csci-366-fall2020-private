@@ -25,19 +25,29 @@ void init_server() {
 }
 
 int handle_client_connect(int player) {
+
     int client_socket_fd = SERVER->player_sockets[player];
     char raw_buffer[2000];
     char_buff *input_buffer = cb_create(2000);
     char_buff *output_buffer = cb_create(2000);
     int read_size;
-    cb_append(output_buffer, "\nbattleBit (? for help) > ");
-    cb_write(client_socket_fd,output_buffer);
+    if (player == 0) {
+        cb_append(output_buffer, "hello player 1, welcome to the server\n"
+                                 "battleBit (? for help) ");
+    }
+    else{
+        cb_append(output_buffer,"hello player 2, welcome to the server\n"
+                                "battleBit (? for help) ");
+
+    }
+    cb_write(client_socket_fd, output_buffer);
+
 
     while ((read_size = recv(client_socket_fd,raw_buffer,2000,0))>0){
         //reset our buffers
         cb_reset(output_buffer);
         cb_reset(input_buffer);
-        if(read_size< 0) {
+        if(read_size > 0) {
             raw_buffer[read_size]= '\0'; // null terminate read
 
             // append to input buffer
@@ -45,13 +55,40 @@ int handle_client_connect(int player) {
 
             //tokenize
             char *command = cb_tokenize(input_buffer," \r\n");
-            if(strcmp(command, "help") ==0) {
+            if(strcmp(command, "?") ==0) {
                 //create output
-                cb_append(output_buffer, "A useful help message... ");
+                cb_append(output_buffer, "? - show help\n"
+                                         "load <string> - load a ship layout \n"
+                                         "show - shows the board \n"
+                                         "fire [0-7] [0-7] - fires at the given position\n"
+                                         "say <string> - Send the string to all players as part of a chat\n"
+                                         "exit\n");
                 cb_append(output_buffer, command);
                 //output it
                 cb_write(client_socket_fd, output_buffer);
-            } else if (strcmp(command, "quit") == 0) {
+
+
+            } else if(strcmp(command,"load") == 0){
+               // int game_load_board(game *game, int player, char * spec);
+
+                cb_append(output_buffer,"Waiting On Player 1");
+                cb_append(output_buffer,command);
+                cb_write(client_socket_fd, output_buffer);
+
+            }
+
+            else if(strcmp(command, "fire") ==0){
+
+                cb_append(output_buffer,"Game Has Not Begun! \n");
+                cb_append(output_buffer,command);
+                cb_write(client_socket_fd, output_buffer);
+            }
+
+          //  else if(strcmp(command,"say") ==0){
+              //  input_buffer->buffer[]
+           // }
+
+            else if (strcmp(command, "quit") == 0) {
                 close(client_socket_fd);
 
             }else if (command != NULL) {
@@ -65,6 +102,7 @@ int handle_client_connect(int player) {
             cb_append(output_buffer,"\nbattleBit (? for help)> ");
             cb_write(client_socket_fd,output_buffer);
         }
+
     }
 
 
@@ -86,6 +124,13 @@ int handle_client_connect(int player) {
 
 void server_broadcast(char_buff *msg) {
     // send message to all players
+
+    for(int i = 0; i<1; i++){
+        SERVER->player_sockets[i];
+
+
+    }
+    printf("%s",msg->buffer);
 }
 
 int run_server() {
@@ -126,34 +171,33 @@ int run_server() {
         struct sockaddr_in client;
         socklen_t size_from_connect;
         int client_socket_fd;
-        int request_count = 0;
         int player = 0;
         while ((client_socket_fd = accept(server_socket_fd,
-                                          (struct sockaddr *) &client,
+
+                        (struct sockaddr *) &client,
                                           &size_from_connect)) > 0) {
-            // char message[100] = {0};
 
 
-            SERVER->player_sockets[0] = pthread_create(&SERVER->player_threads[0], NULL, (void *) handle_client_connect,
-                                                       0);
+
+            SERVER->player_sockets[player] =client_socket_fd;
+                    pthread_create(&SERVER->player_threads[0], NULL,
+                                   (void *)  handle_client_connect,
+                                                            0);
             player++;
 
-            SERVER->player_sockets[1] = pthread_create(&SERVER->player_threads[1], NULL, (void *) handle_client_connect,
-                                                       1);
+            SERVER->player_sockets[player] =  pthread_create(&SERVER->player_threads[1], NULL,
+                                                             (void *) handle_client_connect,
+                            1);
 
             if (player > 1) {
                 break;
             }
 
 
-            // sprintf(message,
-            //    "Welcome to the game Player  - req %d\n\n",
-            //   request_count++);
-            //send(client_socket_fd, message,
-            //  strlen(message), 0);
-                close(client_socket_fd);
-            // }
         }
+
+    }
+}
 
 
         // STEP 8 - implement the server code to put this on the network.
@@ -164,11 +208,11 @@ int run_server() {
         //
         // You will then create a thread running handle_client_connect, passing the player number out
         // so they can interact with the server asynchronously
-    }
-}
 
-    struct game_server *server_create() {
-        struct game_server *server = malloc(sizeof(struct game_server));
+
+
+   // struct game_server *server_create() {
+       // struct game_server *server = malloc(sizeof(struct game_server));
 
         //(&server->player_threads[0],NULL,handle_client_connect,0);
         //pthread_create(&server->player_threads[1],NULL,handle_client_connect,1);
@@ -176,13 +220,13 @@ int run_server() {
         //  pthread_create(&server->player_sockets[1],NULL,handle_client_connect,1);
 
 
-        return server;
-    }
+     //   return server;
+  //  }
 
     int server_start() {
         init_server();
 
-        SERVER = server_create();
+       // SERVER = server_create();
         pthread_create(&SERVER->server_thread, NULL, (void *) run_server, NULL);
 
         // STEP 7 - using a pthread, run the run_server() function asynchronously, so you can still
