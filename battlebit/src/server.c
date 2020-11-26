@@ -35,12 +35,12 @@ int handle_client_connect(int player) {
         cb_append(output_buffer, "hello player 1, welcome to the server\n"
                                  "battleBit (? for help) ");
     }
-    else{
-        cb_append(output_buffer,"hello player 2, welcome to the server\n"
-                                "battleBit (? for help) ");
+    else if (player == 1) {
+        cb_append(output_buffer, "hello player 2, welcome to the server\n"
+                                 "battleBit (? for help) ");
 
     }
-    cb_write(client_socket_fd, output_buffer);
+        cb_write(client_socket_fd, output_buffer);
 
 
     while ((read_size = recv(client_socket_fd,raw_buffer,2000,0))>0){
@@ -55,38 +55,52 @@ int handle_client_connect(int player) {
 
             //tokenize
             char *command = cb_tokenize(input_buffer," \r\n");
-            if(strcmp(command, "?") ==0) {
-                //create output
-                cb_append(output_buffer, "? - show help\n"
-                                         "load <string> - load a ship layout \n"
-                                         "show - shows the board \n"
-                                         "fire [0-7] [0-7] - fires at the given position\n"
-                                         "say <string> - Send the string to all players as part of a chat\n"
-                                         "exit\n");
-                cb_append(output_buffer, command);
-                //output it
-                cb_write(client_socket_fd, output_buffer);
+
+                if (strcmp(command, "?") == 0) {
+                    //create output
+                    cb_append(output_buffer, "? - show help\n"
+                                             "load <string> - load a ship layout \n"
+                                             "show - shows the board \n"
+                                             "fire [0-7] [0-7] - fires at the given position\n"
+                                             "say <string> - Send the string to all players as part of a chat\n"
+                                             "exit\n");
+                    cb_append(output_buffer, command);
+                    //output it
+
+                    cb_write(client_socket_fd, output_buffer);
 
 
-            } else if(strcmp(command,"load") == 0){
-               // int game_load_board(game *game, int player, char * spec);
+                    //char *command = cb_next_token(input_buffer);
+                }
+            if(strcmp(command,"load") == 0){
 
-                cb_append(output_buffer,"Waiting On Player 1");
-                cb_append(output_buffer,command);
+                  if(player ==0) {
+                      cb_append(output_buffer, "Waiting On Player 1\n");
+                      cb_append(output_buffer, command);
+                  }
+                  else if(player ==1){
+                      cb_append(output_buffer, "all player boards are loaded\n");
+                      cb_append(output_buffer, command);
+                  }
                 cb_write(client_socket_fd, output_buffer);
 
             }
+
 
             else if(strcmp(command, "fire") ==0){
+                //game_fire;
+                if(player == 0) {
 
-                cb_append(output_buffer,"Game Has Not Begun! \n");
-                cb_append(output_buffer,command);
+
+                    cb_append(output_buffer, "Game Has Not Begun! \n");
+                    cb_append(output_buffer, command);
+                }else if(player ==1){
+                    cb_append(output_buffer, "Player 0 Turn \n");
+                    cb_append(output_buffer, command);
+                }
                 cb_write(client_socket_fd, output_buffer);
             }
 
-          //  else if(strcmp(command,"say") ==0){
-              //  input_buffer->buffer[]
-           // }
 
             else if (strcmp(command, "quit") == 0) {
                 close(client_socket_fd);
@@ -127,7 +141,6 @@ void server_broadcast(char_buff *msg) {
 
     for(int i = 0; i<1; i++){
         SERVER->player_sockets[i];
-
 
     }
     printf("%s",msg->buffer);

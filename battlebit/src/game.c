@@ -96,6 +96,7 @@ unsigned long long int xy_to_bitval(int x, int y) {
     unsigned long long value = 1ull <<x;
     value = 1ull << (y*8+x);
 
+
     if(x == 8 || y == 8 || x == -1 || y == -1){
         return 0;
     }

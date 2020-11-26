@@ -66,6 +66,8 @@ void repl_execute_command(struct char_buff * buffer) {
 
             // work with game_load_board
 
+
+
         } else if (strcmp(command, "fire") == 0) {
 
             // work with game_fire
